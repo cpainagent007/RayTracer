@@ -1,5 +1,9 @@
 #include "Renderer.h"
 #include "Framebuffer.h"
+#include "Camera.h"
+#include "Scene.h"
+#include "Sphere.h"
+#include "Random.h"
 
 #include <iostream>
 
@@ -13,6 +17,14 @@ int main() {
 	renderer.CreateWindow("Ray Tracer", SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	Framebuffer framebuffer(renderer, SCREEN_WIDTH, SCREEN_HEIGHT);
+
+	float aspectRatio = (framebuffer.width / framebuffer.height);
+	Camera camera(70.0f, aspectRatio);
+	camera.SetView({ 0, 0, 5 }, { 0, 0, 0 });
+
+	Scene scene;
+	auto sphere = std::make_unique<Sphere>(glm::vec3{ 0, 0, 0 }, 2.0f, color3_t{ 1, 0, 0 });
+	scene.AddObject(std::move(sphere));
 
 	SDL_Event event;
 	bool quit = false;
@@ -31,10 +43,15 @@ int main() {
 
 		// draw to frame buffer
 		framebuffer.Clear({ 0, 0, 0, 255 });
-		for (int i = 0; i < 300; i++) framebuffer.DrawPoint(rand() % SCREEN_WIDTH, rand() % SCREEN_HEIGHT, { 255, 255, 255, 255 });
+		scene.Render(framebuffer, camera);
 
 		// update frame buffer, copy buffer pixels to texture
 		framebuffer.Update();
+		for (int i = 0; i < 5; i++) {
+			glm::vec3 position = getReal(glm::vec3{ -3.0f }, glm::vec3{ 3.0f });
+			auto sphere = std::make_unique<Sphere>(position, 1.0f, color3_t{ 1, 0, 0 });
+			scene.AddObject(std::move(sphere));
+		}
 
 		// copy frame buffer texture to renderer to display
 		renderer.CopyFramebuffer(framebuffer);
