@@ -23,8 +23,6 @@ int main() {
 	camera.SetView({ 0, 0, 5 }, { 0, 0, 0 });
 
 	Scene scene;
-	auto sphere = std::make_unique<Sphere>(glm::vec3{ 0, 0, 0 }, 2.0f, color3_t{ 1, 0, 0 });
-	scene.AddObject(std::move(sphere));
 
 	SDL_Event event;
 	bool quit = false;

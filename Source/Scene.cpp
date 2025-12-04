@@ -20,7 +20,7 @@ void Scene::Render(Framebuffer& framebuffer, const Camera& camera) {
 			// trace ray
 			raycastHit_t raycastHit;
 			// 0 = min ray distance, 100 = max ray distance
-			color3_t color = Trace(ray, 0, 100, raycastHit);
+			color3_t color = Trace(ray, 0, 100);
 
 			framebuffer.DrawPoint(x, y, ColorConvert(color));
 		}
@@ -31,10 +31,11 @@ void Scene::AddObject(std::unique_ptr<Object> object) {
 	objects.push_back(std::move(object));
 }
 
-color3_t Scene::Trace(const struct ray_t& ray, float minDistance, float maxDistance, raycastHit_t& raycastHit) {
+color3_t Scene::Trace(const struct ray_t& ray, float minDistance, float maxDistance) {
 
 	bool rayHit = false;
 	float closestDistance = maxDistance;
+	raycastHit_t raycastHit;
 
 	// check if scene objects are hit by the ray
 	for (auto& object : objects) {
