@@ -6,16 +6,16 @@
 class Sphere : public Object
 {
 public:
-	Sphere() = default;
-	Sphere(const glm::vec3& position, float radius, const color3_t& color) :
-		Object{color},
-		position(position),
-		radius(radius)
-	{ }
+    Sphere() = default;
 
-	bool Hit(const ray_t& ray, float minDistance, float maxDistance, raycastHit_t& raycastHit) override;
+    Sphere(const Transform& transform, float radius, std::shared_ptr<Material> material)
+        : Object{transform, material},
+        radius(radius)
+    {
+    }
+
+    bool Hit(const ray_t& ray, float minDistance, float maxDistance, raycastHit_t& raycastHit) override;
 
 public:
-	glm::vec3 position;
-	float radius{ 0 };
+    float radius = 0;
 };

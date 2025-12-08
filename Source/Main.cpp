@@ -4,7 +4,10 @@
 #include "Scene.h"
 #include "Sphere.h"
 #include "Random.h"
+#include "Material.h"
 
+#include <array>
+#include <memory>
 #include <iostream>
 
 int main() {
@@ -23,6 +26,26 @@ int main() {
 	camera.SetView({ 0, 0, 5 }, { 0, 0, 0 });
 
 	Scene scene;
+
+	auto red = std::make_shared<Lambertian>(color3_t{ 1.0f, 0.0f, 0.0f });
+	auto green = std::make_shared<Lambertian>(color3_t{ 0.0f, 1.0f, 0.0f });
+	auto blue = std::make_shared<Lambertian>(color3_t{ 0.0f, 0.0f, 1.0f });
+	auto light = std::make_shared<Emissive>(color3_t{ 1.0f, 1.0f, 1.0f }, 3.0f);
+	auto metal = std::make_shared<Metal>(color3_t{ 1.0f, 1.0f, 1.0f }, 0.0f);
+
+	std::shared_ptr<Material> materials[] = { red, green, blue, light, metal };
+
+	for (int i = 0; i < 15; i++) {
+
+		glm::vec3 position = getReal(glm::vec3{ -3.0f }, glm::vec3{ 3.0f });
+
+		std::unique_ptr<Object> sphere = std::make_unique<Sphere>(Transform{ position }, getReal(0.2f, 1.0f), materials[getInt(4)]);
+
+		scene.AddObject(std::move(sphere));
+	}
+
+
+	
 
 	SDL_Event event;
 	bool quit = false;
@@ -45,11 +68,6 @@ int main() {
 
 		// update frame buffer, copy buffer pixels to texture
 		framebuffer.Update();
-		for (int i = 0; i < 5; i++) {
-			glm::vec3 position = getReal(glm::vec3{ -3.0f }, glm::vec3{ 3.0f });
-			auto sphere = std::make_unique<Sphere>(position, 1.0f, color3_t{ 1, 0, 0 });
-			scene.AddObject(std::move(sphere));
-		}
 
 		// copy frame buffer texture to renderer to display
 		renderer.CopyFramebuffer(framebuffer);
