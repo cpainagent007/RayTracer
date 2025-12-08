@@ -9,6 +9,7 @@
 #include <array>
 #include <memory>
 #include <iostream>
+#include "Plane.h"
 
 int main() {
 	constexpr int SCREEN_WIDTH = 800;
@@ -44,8 +45,9 @@ int main() {
 		scene.AddObject(std::move(sphere));
 	}
 
-
-	
+	auto gray = std::make_shared<Lambertian>(color3_t{ 0.2f, 0.2f, 0.2f });
+	std::unique_ptr<Plane> plane = std::make_unique<Plane>(Transform{ glm::vec3{ 0.0f, -1.0f, 0.0f } }, gray);
+	scene.AddObject(std::move(plane));
 
 	SDL_Event event;
 	bool quit = false;
