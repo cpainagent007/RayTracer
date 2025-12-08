@@ -39,7 +39,7 @@ int main() {
 
 		glm::vec3 position = getReal(glm::vec3{ -3.0f }, glm::vec3{ 3.0f });
 
-		std::unique_ptr<Object> sphere = std::make_unique<Sphere>(Transform{ position }, getReal(0.2f, 1.0f), materials[getInt(4)]);
+		std::unique_ptr<Object> sphere = std::make_unique<Sphere>(Transform{ position }, getReal(0.2f, 1.0f), materials[getInt(5)]);
 
 		scene.AddObject(std::move(sphere));
 	}
@@ -64,7 +64,7 @@ int main() {
 
 		// draw to frame buffer
 		framebuffer.Clear({ 0, 0, 0, 255 });
-		scene.Render(framebuffer, camera, 50);
+		scene.Render(framebuffer, camera, 10);
 
 		// update frame buffer, copy buffer pixels to texture
 		framebuffer.Update();
